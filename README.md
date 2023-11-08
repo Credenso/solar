@@ -1,4 +1,4 @@
-![solar](https://github.com/Credenso/solar/assets/20846616/4c9d8252-bae6-4053-b859-4824af5dbf41)
+![solar](assets/solar.png)
 
 
 **S**torage and 

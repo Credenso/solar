@@ -7,7 +7,7 @@ import secrets
 from datetime import datetime
 
 # Constants - might put these in a config file
-STATION = "solar.credenso.cafe"
+STATION = "solar.localhost"
 PORT = 1618
 
 # Application Setup
@@ -50,7 +50,6 @@ def invite_get():
     name = request.query.name
     nonce = secrets.token_hex(24)
     nonces[name] = nonce
-    print(nonces)
     return nonce
 
 @app.post('/invite')
@@ -87,7 +86,6 @@ def invite_post():
 def register_post():
     name = request.query.name
     memberList = json.loads(members())
-    print(memberList)
     if memberList['names'].get(name) is not None:
         abort(401, "Name in use")
 
@@ -162,7 +160,6 @@ def invite_post():
     if image:
         events.append(newFileEvent(pubkey, name, image))
     
-    print(request.forms.keys())
     hasLyrics = request.forms.get('hasLyrics')
     if hasLyrics is not None:
         lyrics = request.forms.getall('formLyrics')
@@ -199,8 +196,10 @@ with open('assets/art.txt', 'r') as art:
     for line in art.readlines():
         print(line, end="")
 
-# Make sure the members/ dir exists
+# Make sure the relevant directories exist
 os.makedirs('members', exist_ok=True)
+os.makedirs('invites/completed', exist_ok=True)
 
 # Run the server!
-app.run(host='localhost', port=PORT, debug=True)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=PORT, debug=True)

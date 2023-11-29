@@ -1,4 +1,4 @@
-from ingredients.bottle import Bottle, run, request, abort
+from ingredients.bottle import Bottle, run, request, template, abort, static_file
 from ingredients.schnorr import sha256, schnorr_verify, schnorr_sign
 from ingredients.files import load_dir, make_file, update_file
 import os
@@ -12,6 +12,25 @@ PORT = 1618
 
 # Application Setup
 app = Bottle()
+
+on_the_menu = []
+from potions import example
+on_the_menu.append(example)
+
+# We rack the potions one by one so that the menu
+# can easily be modified by a shell script.
+potion_rack = []
+for potion in on_the_menu:
+    app.mount(potion.path, potion.app)
+    potion_rack.append({
+        'name': potion.name,
+        'path': potion.path,
+        'description': potion.description,
+        'image_full': potion.image_full,
+        'image_thumb': potion.image_thumb
+        })
+
+
 nonces = {}
 
 # TODO - Integrate https://github.com/rndusr/torf
@@ -190,6 +209,21 @@ def members():
             memberDictionary['admins'].append(card.metadata.get('public_key'))
 
     return json.dumps(memberDictionary)
+
+@app.route('/u/<filepath:path>')
+def static(filepath):
+        return static_file(filepath, root=f'{os.getcwd()}/u')
+
+# This handles all the static files in the given system...
+# Until we get NGINX to take care of it.
+@app.route('/static/<filepath:path>')
+def static(filepath):
+        return static_file(filepath, root=f'{os.getcwd()}/static')
+
+
+@app.route('/')
+def index():
+    return template("index.tpl", title="Bottle Rack", potions=potion_rack)
 
 # Display the art as the server loads
 with open('assets/art.txt', 'r') as art:

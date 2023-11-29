@@ -8,6 +8,10 @@ leveraging user identity to build extra features into the network using a simple
 
 By default, SOLAR provides invitation, registration, and upload endpoints.
 
+## Main Page
+Solar provides a landing page with portals to any currently operational
+planets. Planets are installed by placing them in the 
+
 #### Running
 Solar is a Python project with no dependencies. It can be run with `python app.py` or by using
 a WSGI-compatible server such as Gunicorn.

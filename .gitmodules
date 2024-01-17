@@ -1,0 +1,3 @@
+[submodule "ingredients"]
+	path = ingredients
+	url = git@zenen.space:ingredients
